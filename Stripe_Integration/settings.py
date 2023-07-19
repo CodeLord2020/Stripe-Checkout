@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 from dotenv import load_dotenv
 from pathlib import Path
+from pathlib import Path
+from environs import Env
+env = Env()
+env.read_env()
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-pzqa7&^f7vkosrv#6j+%$-4h^7@lk*bhb13o09k_dj_+ts&*b5"
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -39,6 +44,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
 
     'products',
+    'products1',
 ]
 
 MIDDLEWARE = [
@@ -70,6 +76,9 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "Stripe_Integration.wsgi.application"
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
 
 # Database
@@ -123,12 +132,27 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-import os
-from pathlib import Path
-from environs import Env
-env = Env()
-env.read_env()
+
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+
 
 STRIPE_PUBLIC_KEY = os.getenv('STRIPE_Publishable_Key')
 STRIPE_SECRET_KEY = os.getenv('STRIPE_Secret_Key')
-STRIPE_WEBHOOK_SECRET = ""
+STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET")
+
+BACKEND_DOMAIN = os.getenv("BACKEND_DOMAIN")
+PAYMENT_SUCCESS_URL = os.getenv("PAYMENT_SUCCESS_URL")
+PAYMENT_CANCEL_URL = os.getenv("PAYMENT_CANCEL_URL")
+
+
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+# EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')

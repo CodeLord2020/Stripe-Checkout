@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from products.views import (
     CreateCheckoutSessionView,
     ProductLandingPageView,
@@ -25,6 +25,8 @@ from products.views import (
 )
 urlpatterns = [
     path("admin/", admin.site.urls),
+
+    path("products1/", include("products1.urls", namespace="products1")),
     path('create-payment-intent/<pk>/', StripeIntentView.as_view(), name='create-payment-intent'),
     path('webhooks/stripe/', stripe_webhook, name='stripe-webhook'),
     path('cancel/', CancelView.as_view(), name='cancel'),
